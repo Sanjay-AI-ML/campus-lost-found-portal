@@ -1,0 +1,128 @@
+{
+  "kind": "build_request",
+  "title": "Add Trust/Credit Score System for Finders",
+  "projectName": "Campus Lost & Found Portal",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-11",
+      "text": "Extend the backend to support a finder profile system. When a claim is approved and an item is marked resolved, look up or create a finder profile in a 'finders' Firestore collection (keyed by contact). Increment their total_returned count by 1 and add +10 to their credit_score. The finder profile document must store: name, contact, total_returned, and credit_score.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Store finder profiles in a separate collection.",
+          "Track: Name, Contact, Total items returned, Credit score",
+          "The credit score must update automatically when a claim is approved."
+        ]
+      },
+      "acceptanceCriteria": [
+        "A 'finders' Firestore collection exists with documents keyed by finder contact.",
+        "Each finder document has fields: name, contact, total_returned (int), credit_score (int).",
+        "When approveClaim is called, the linked finder's credit_score increases by 10 and total_returned increases by 1.",
+        "If no finder profile exists for that contact, a new document is created with credit_score=10 and total_returned=1.",
+        "Existing approve/reject/submit claim routes remain functional."
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Modify the GET /items (or equivalent list endpoint) so that found items are sorted by their finder's credit_score in descending order (highest credit score first). Lost items retain their existing sort order (latest timestamp first). The credit_score is fetched from the 'finders' collection using the item's contact field.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Sort found items based on the finder's credit score.",
+          "The sorting should prioritize: Higher credit score finders first."
+        ]
+      },
+      "acceptanceCriteria": [
+        "GET /items returns found items sorted by finder credit_score descending.",
+        "Found items with no matching finder profile are sorted last (credit_score treated as 0).",
+        "Lost items continue to be sorted by timestamp descending.",
+        "The combined response places found items (sorted by credit score) separately or the overall list reflects the correct ordering."
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Add a GET /finders endpoint that returns all finder profiles from the 'finders' Firestore collection, each including name, contact, total_returned, and credit_score, sorted by credit_score descending. This endpoint will be used by the frontend leaderboard or badge display.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Store finder profiles in a separate collection.",
+          "Display a badge like: Bronze (0–20 points), Silver (21–50 points), Gold (51+ points)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "GET /finders returns a JSON array of finder profile objects.",
+        "Each object includes: name, contact, total_returned, credit_score.",
+        "Results are sorted by credit_score descending.",
+        "Returns an empty array if no finders exist."
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Update the item card UI to display a credit score badge for the finder of each 'found' item. Derive the badge tier from the finder's credit_score stored on the item or fetched from context: 🥉 Bronze (0–20 points), 🥈 Silver (21–50 points), 🥇 Gold (51+ points). The badge should appear near the finder's contact info on the card. For lost items or items with no finder profile, no badge is shown.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Display a badge like: 🥉 Bronze (0–20 points), 🥈 Silver (21–50 points), 🥇 Gold (51+ points)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Found item cards show a Bronze, Silver, or Gold badge based on the finder's credit_score.",
+        "Bronze badge (🥉) is displayed when credit_score is 0–20.",
+        "Silver badge (🥈) is displayed when credit_score is 21–50.",
+        "Gold badge (🥇) is displayed when credit_score is 51 or higher.",
+        "Lost item cards do not display any credit score badge.",
+        "If finder has no profile/score, no badge is shown."
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Include the finder's current credit_score in the item data returned by the backend list/detail endpoints for found items. Attach the credit_score (and badge tier label) to each found item's response payload by joining with the 'finders' collection on the contact field, so the frontend can render the badge without a separate fetch.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Sort found items based on the finder's credit score.",
+          "Display a badge like: Bronze, Silver, Gold"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each found item in the GET /items response includes finder_credit_score (int, defaults to 0 if no profile).",
+        "Each found item includes finder_badge (string: 'Bronze', 'Silver', or 'Gold', or empty string if no profile).",
+        "Lost items do not include these fields or they are null/omitted.",
+        "The join does not cause a significant performance regression for typical hackathon data volumes."
+      ]
+    }
+  ],
+  "constraints": [
+    "The platform only supports Motoko backend and React/TypeScript frontend — Flask, Python, Bootstrap, and Firebase are NOT supported on this platform. The build will use the existing Motoko + React + Tailwind stack.",
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui.",
+    "All backend logic must remain in a single Motoko actor in backend/main.mo.",
+    "Existing item, claim, and status transition logic must remain fully functional."
+  ],
+  "nonGoals": [
+    "No Flask, Python, Bootstrap, or Firebase — the platform uses Motoko + React + Tailwind.",
+    "No separate leaderboard page (badges display inline on item cards only, unless explicitly requested).",
+    "No authentication or login required to view credit score badges.",
+    "No manual admin override of credit scores.",
+    "No negative scoring or penalties."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

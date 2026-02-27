@@ -1,0 +1,76 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-27T05:49:47.071Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 5,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-11",
+        "summary": "Extend the backend to support a finder profile system. When a claim is approved and an item is marked resolved, look up or create a finder profile in a 'finders' Firestore collection (keyed by contact). Increment their total_returned count by 1 and add +10 to their credit_score. The finder profile document must store: name, contact, total_returned, and credit_score.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Modify the GET /items (or equivalent list endpoint) so that found items are sorted by their finder's credit_score in descending order (highest credit score first). Lost items retain their existing sort order (latest timestamp first). The credit_score is fetched from the 'finders' collection using the item's contact field.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Add a GET /finders endpoint that returns all finder profiles from the 'finders' Firestore collection, each including name, contact, total_returned, and credit_score, sorted by credit_score descending. This endpoint will be used by the frontend leaderboard or badge display.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Update the item card UI to display a credit score badge for the finder of each 'found' item. Derive the badge tier from the finder's credit_score stored on the item or fetched from context: 🥉 Bronze (0–20 points), 🥈 Silver (21–50 points), 🥇 Gold (51+ points). The badge should appear near the finder's contact info on the card. For lost items or items with no finder profile, no badge is shown.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/ItemCard.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ItemCard.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      },
+      {
+        "id": "REQ-15",
+        "summary": "Include the finder's current credit_score in the item data returned by the backend list/detail endpoints for found items. Attach the credit_score (and badge tier label) to each found item's response payload by joining with the 'finders' collection on the contact field, so the frontend can render the badge without a separate fetch.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/ItemCard.tsx",
+    "frontend/src/components/ItemGrid.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

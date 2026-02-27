@@ -1,0 +1,31 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add Trust/Credit Score System for Finders",
+  "requirements": [
+    {
+      "id": "REQ-14",
+      "summary": "Display credit score badge on found item cards based on finder's credit_score",
+      "acceptanceCriteria": [
+        "Found item cards show a Bronze, Silver, or Gold badge based on the finder's credit_score.",
+        "Bronze badge (🥉) is displayed when credit_score is 0–20.",
+        "Silver badge (🥈) is displayed when credit_score is 21–50.",
+        "Gold badge (🥇) is displayed when credit_score is 51 or higher.",
+        "Lost item cards do not display any credit score badge.",
+        "If finder has no profile/score, no badge is shown."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ItemCard.tsx",
+          "operation": "modify",
+          "description": "Add a CreditBadge component or inline badge display that renders the appropriate emoji badge (🥉 Bronze, 🥈 Silver, 🥇 Gold) based on the item's finder_credit_score field (when itemType is 'found'). Position the badge near the contact info section. Only render for found items with a valid credit_score. Use the existing card styling patterns and Tailwind classes for consistency."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Update the Item type interface or extend the backend Item type to include optional finder_credit_score (number) and finder_badge (string) fields. Ensure the useGetAllItems and useGetActiveItems hooks return items with these new fields populated by the backend. The queries should continue to invalidate the items cache on mutations as before."
+        }
+      ]
+    }
+  ]
+}

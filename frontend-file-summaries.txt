@@ -1,0 +1,11 @@
+{
+  "frontend/src/index.css": "Global styles with a warm campus-inspired OKLCH color palette (amber primary, red-orange for lost, emerald for found), Google Fonts import for Playfair Display and Inter, and utility classes for badge colors and card shadows.",
+  "frontend/tailwind.config.js": "Extended Tailwind config with custom display/sans font families, additional border-radius and box-shadow tokens, and a fade-in animation keyframe.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including new `useGetItemsWithFinder` (sorted found items by credit score), `useGetFinders`, and exported `getFinderBadge` helper and `FinderMap` type; `useApproveClaim` now also invalidates the finders cache on success.",
+  "frontend/src/components/ItemForm.tsx": "Form component with all required fields (title, description, category dropdown, location, contact, lost/found toggle), client-side validation, and calls useAddItem on submit with a generated unique ID.",
+  "frontend/src/components/ItemCard.tsx": "Card component with all existing functionality plus an optional `creditScore` prop; found items with a valid credit score display a `CreditBadge` (🥉 Bronze, 🥈 Silver, 🥇 Gold, 💎 Platinum) near the contact info section.",
+  "frontend/src/components/FilterControls.tsx": "Filter button group for All / Lost / Found / Active Only with live item counts and active state styling using the primary color token.",
+  "frontend/src/components/ItemGrid.tsx": "Responsive grid that accepts an optional `finderMap` prop and resolves each found item's credit score from the map before passing it to `ItemCard`.",
+  "frontend/src/App.tsx": "Root app component now uses `useGetItemsWithFinder` and `useGetFinders`, builds a `FinderMap` for O(1) lookups, passes it to `ItemGrid`, shows a trusted-finders stat in the hero, and renders a `TrustScoreLegend` above the item grid.",
+  "frontend/src/components/ClaimModal.tsx": "New modal component for submitting ownership claims on a FOUND item; contains a form with name, contact, and three identifying clue fields, full client-side validation, loading state on the submit button, and auto-closes on successful submission via useSubmitClaim."
+}

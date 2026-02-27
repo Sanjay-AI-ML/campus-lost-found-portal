@@ -1,0 +1,21 @@
+{
+  "backend/main.mo": "Main Motoko actor for the Campus Lost & Found app, defining Item, Claim, and Finder types, and exposing functions to add, retrieve, resolve, and claim items, with credit score badge tier logic for finders.",
+  "backend/migration.mo": "Migration module that upgrades the actor state from an older schema (items + claims) to a newer one by adding an empty finders map.",
+  "feature_evidence.json": "Feature evidence report linking the credit score badge UI feature to its implementation files, components, and test IDs.",
+  "frontend-file-summaries.txt": "JSON document containing one-sentence summaries of each frontend source file, describing their roles in the Campus Lost & Found UI.",
+  "frontend/index.css": "Base Tailwind CSS file defining OKLCH CSS custom properties for light and dark themes including background, foreground, primary, and chart color tokens.",
+  "frontend/index.html": "HTML entry point for the Campus Lost & Found Portal React app, mounting the app into a root div and loading the main TSX module.",
+  "frontend/src/App.tsx": "Root React component that fetches items with finder data, builds a FinderMap, renders the header, filter controls, trust score legend, item grid, and report item dialog.",
+  "frontend/src/components/ClaimModal.tsx": "Modal dialog component for submitting an ownership claim on a found item, with a validated form collecting name, contact, and three identifying clues.",
+  "frontend/src/components/FilterControls.tsx": "Filter button group component allowing users to filter items by All, Lost, Found, or Active Only, displaying live counts for each category.",
+  "frontend/src/components/ItemCard.tsx": "Renders a single lost/found item card with status badges, finder credit badge, and action buttons for resolving, claiming, approving, or rejecting claims. Fetches claims for items in claim_pending state and displays the latest claim for approval/rejection.",
+  "frontend/src/components/ItemForm.tsx": "Form component for reporting a lost or found item, with fields for title, description, category, location, contact, and item type toggle. Validates inputs and submits via the useAddItem mutation hook.",
+  "frontend/src/components/ItemGrid.tsx": "Displays a responsive grid of ItemCard components with skeleton loading placeholders and an empty-state message. Looks up finder credit scores from a finderMap for found items.",
+  "frontend/src/hooks/useActor.ts": "Custom hook that creates and caches an ICP backend actor (authenticated or anonymous) using React Query, and invalidates dependent queries whenever the actor changes.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Provides an Internet Identity authentication context with login, logout, and status state, backed by DFINITY's AuthClient and exposed via a React context provider and useInternetIdentity hook.",
+  "frontend/src/hooks/useQueries.ts": "Defines React Query hooks and mutations for all backend interactions including fetching items and finders, adding items, resolving items, submitting claims, and approving/rejecting claims. Also exports a getFinderBadge utility for mapping credit scores to tier labels.",
+  "frontend/src/index.css": "Global CSS file that imports Google Fonts (Playfair Display, Inter), sets up Tailwind directives, and defines a comprehensive OKLCH-based design token system for light/dark themes including status badge colors, card shadows, and typography.",
+  "frontend/src/main.tsx": "React app entry point that wraps the App component with TanStack QueryClientProvider and a custom InternetIdentityProvider before mounting to the DOM.",
+  "frontend/tailwind.config.js": "Tailwind CSS configuration extending the default theme with custom OKLCH color tokens, display/sans font families, border radius scale, card box shadows, and accordion keyframe animations, plus typography, container-queries, and animate plugins.",
+  "project_state.json": "Project state tracking file recording the current version, architecture summary, existing features, and known issues for the Campus Lost & Found Portal hackathon app built with React frontend, Flask backend, and Firebase Firestore."
+}

@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Campus Lost & Found Portal — a full-stack hackathon web app using HTML + Bootstrap 5 + Vanilla JS (frontend), Python Flask + Flask-CORS (backend), and Firebase Firestore (database). Supports submitting lost/found items, browsing with filter tabs, color badges, and marking items resolved. Has a claim-based verification workflow for FOUND items with claim submission, review, approve/reject flows, and status transitions (active → claim_pending → resolved/active). Now adding a Trust/Credit Score system for finders: +10 points per resolved claim, finder profiles stored in Firestore, Bronze/Silver/Gold badges, and found items sorted by finder credit score.",
+  "architectural_notes": [
+    "Frontend: HTML + Bootstrap 5 + Vanilla JS using Fetch API",
+    "Backend: Python Flask with Flask-CORS on port 5000",
+    "Database: Firebase Firestore via Firebase Admin SDK (serviceAccountKey.json excluded via .gitignore)",
+    "REST API: POST /items (add), GET /items (list sorted by timestamp DESC), PATCH /items/<id>/resolve",
+    "Firestore schema: title, description, category, location, type (lost/found), contact, status (active/resolved), timestamp",
+    "Firestore 'claims' collection: item_id, name, contact, clue1, clue2, clue3, timestamp; item status transitions: active → claim_pending → resolved | active",
+    "New REST routes: POST /items/<id>/claim (submit claim), POST /claims/<id>/approve (resolve item), POST /claims/<id>/reject (reset item to active)",
+    "Firestore 'finders' collection: name, contact, total_returned, credit_score; updated on claim approval (+10 pts). Found items sorted by finder credit_score DESC. Badge tiers: Bronze 0-20, Silver 21-50, Gold 51+."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-build-a-react-frontend-with-a-form-to-submit-new-lost-found-items-the-form-must-include-fields-for-title-description-category-dropdown-electronics-clothing-books-id-cards-keys-bags-other-location-item-type-lost-found-toggle-or-radio-and-contact-info-submission-should-call-the-backend-additem-function",
+      "title": "Build a React frontend with a form to submit new lost/found items. The form must include fields for: title, description, category (dropdown: Electronics, Clothing, Books, ID/Cards, Keys, Bags, Other), location, item type (Lost / Found toggle or radio), and contact info. Submission should call the backend addItem function.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-all-submitted-items-as-cards-in-a-responsive-grid-layout-each-card-must-show-title-description-category-location-contact-and-timestamp-apply-a-distinct-color-badge-to-differentiate-lost-e-g-red-orange-vs-found-e-g-green-items-resolved-items-should-appear-visually-distinct-e-g-greyed-out-or-with-a-resolved-stamp-badge",
+      "title": "Display all submitted items as cards in a responsive grid layout. Each card must show: title, description, category, location, contact, and timestamp. Apply a distinct color badge to differentiate 'Lost' (e.g., red/orange) vs 'Found' (e.g., green) items. Resolved items should appear visually distinct (e.g., greyed out or with a 'Resolved' stamp/badge).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-mark-as-resolved-button-on-each-active-item-card-clicking-it-should-call-the-backend-resolveitem-function-and-update-the-ui-to-reflect-the-resolved-status-without-requiring-a-full-page-reload",
+      "title": "Add a 'Mark as Resolved' button on each active item card. Clicking it should call the backend resolveItem function and update the UI to reflect the resolved status without requiring a full page reload.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-filter-tabs-or-toggle-buttons-at-the-top-of-the-items-list-to-filter-by-all-lost-only-found-only-and-active-only-hide-resolved-the-filter-should-work-client-side-without-re-fetching-from-the-backend",
+      "title": "Add filter tabs or toggle buttons at the top of the items list to filter by: All, Lost Only, Found Only, and Active Only (hide resolved). The filter should work client-side without re-fetching from the backend.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-visual-theme-across-the-app-use-a-clean-campus-academic-inspired-design-with-a-warm-neutral-background-bold-typography-and-clear-visual-hierarchy-use-card-shadows-rounded-corners-and-a-consistent-accent-color-palette-ensure-the-layout-is-responsive-and-looks-polished-on-both-desktop-and-mobile",
+      "title": "Apply a cohesive visual theme across the app. Use a clean, campus/academic-inspired design with a warm neutral background, bold typography, and clear visual hierarchy. Use card shadows, rounded corners, and a consistent accent color palette. Ensure the layout is responsive and looks polished on both desktop and mobile.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-react-query-hook-file-or-extend-usequeries-ts-with-hooks-for-the-three-new-backend-functions-usesubmitclaim-useapproveclaim-and-userejectclaim-each-mutation-hook-should-call-the-corresponding-backend-actor-function-then-invalidate-the-items-query-so-the-ui-refreshes-automatically-without-a-full-page-reload",
+      "title": "Add a React Query hook file (or extend useQueries.ts) with hooks for the three new backend functions: useSubmitClaim, useApproveClaim, and useRejectClaim. Each mutation hook should call the corresponding backend actor function, then invalidate the items query so the UI refreshes automatically without a full page reload.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-claimmodal-react-component-it-should-render-a-modal-dialog-containing-a-form-with-fields-name-contact-clue1-clue2-and-clue3-all-required-on-submit-it-calls-the-usesubmitclaim-hook-with-the-associated-item-id-while-submitting-show-a-loading-state-on-the-submit-button-on-success-close-the-modal-follow-the-existing-dialog-modal-pattern-used-in-the-app-dialog-component-from-the-ui-library",
+      "title": "Create a ClaimModal React component. It should render a modal dialog containing a form with fields: name, contact, clue1, clue2, and clue3 (all required). On submit, it calls the useSubmitClaim hook with the associated item ID. While submitting, show a loading state on the submit button. On success, close the modal. Follow the existing dialog/modal pattern used in the app (Dialog component from the UI library).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-itemcard-component-to-support-the-claim-based-verification-workflow-apply-the-following-conditional-ui-logic-based-on-item-status-and-itemtype-1-if-itemtype-is-found-and-status-is-active-show-a-submit-claim-button-that-opens-the-claimmodal-for-that-item-2-if-status-is-claim-pending-hide-the-submit-claim-button-and-instead-display-a-claim-under-review-badge-or-label-3-if-status-is-resolved-disable-all-action-buttons-and-show-the-existing-resolved-visual-treatment-4-add-approve-claim-and-reject-claim-buttons-visible-when-status-is-claim-pending-representing-the-finder-admin-review-view-these-call-useapproveclaim-and-userejectclaim-respectively-the-existing-mark-as-resolved-button-should-remain-for-lost-items-with-status-active",
+      "title": "Update the ItemCard component to support the claim-based verification workflow. Apply the following conditional UI logic based on item status and itemType: (1) If itemType is 'found' and status is 'active', show a 'Submit Claim' button that opens the ClaimModal for that item. (2) If status is 'claim_pending', hide the 'Submit Claim' button and instead display a 'Claim Under Review' badge or label. (3) If status is 'resolved', disable all action buttons and show the existing 'Resolved' visual treatment. (4) Add 'Approve Claim' and 'Reject Claim' buttons visible when status is 'claim_pending' (representing the finder/admin review view); these call useApproveClaim and useRejectClaim respectively. The existing 'Mark as Resolved' button should remain for 'lost' items with status 'active'.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-item-card-ui-to-display-a-credit-score-badge-for-the-finder-of-each-found-item-derive-the-badge-tier-from-the-finder-s-credit-score-stored-on-the-item-or-fetched-from-context-bronze-0-20-points-silver-21-50-points-gold-51-points-the-badge-should-appear-near-the-finder-s-contact-info-on-the-card-for-lost-items-or-items-with-no-finder-profile-no-badge-is-shown",
+      "title": "Update the item card UI to display a credit score badge for the finder of each 'found' item. Derive the badge tier from the finder's credit_score stored on the item or fetched from context: 🥉 Bronze (0–20 points), 🥈 Silver (21–50 points), 🥇 Gold (51+ points). The badge should appear near the finder's contact info on the card. For lost items or items with no finder profile, no badge is shown.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create a Motoko backend actor that stores lost/found items with the following fields: title, description, category, location, itemType (lost/found), contact, status (active/resolved), and timestamp. Expose functions to: add a new item, get all items sorted by latest timestamp, and mark an item as resolved by ID.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add claim-based verification workflow: claim submission form (name, contact, clue1-3) stored in Firestore 'claims' collection linked by item_id; status transitions active→claim_pending→resolved/active; backend routes for submit/approve/reject claim; frontend modal, status labels, and approve/reject buttons.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Extend the Motoko backend actor to support a claim-based verification workflow. Add a Claim type with fields: id, itemId, name, contact, clue1, clue2, clue3, and timestamp. Add stable storage for claims. Expose three new functions: submitClaim(itemId, name, contact, clue1, clue2, clue3) which stores the claim and sets the linked item's status to 'claim_pending'; approveClaim(claimId) which sets the linked item's status to 'resolved'; and rejectClaim(claimId) which sets the linked item's status back to 'active'. Ensure existing addItem, getAllItems, getActiveItems, and resolveItem functions remain unchanged.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add a Trust/Credit Score system for finders: store finder profiles (name, contact, total_returned, credit_score) in a Firestore 'finders' collection. Award +10 points to the finder when a claim is approved/resolved. Sort found items by finder credit score (descending). Display Bronze (0-20), Silver (21-50), Gold (51+) badges on item cards. Update credit score automatically on claim approval in the Flask backend.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Extend the backend to support a finder profile system. When a claim is approved and an item is marked resolved, look up or create a finder profile in a 'finders' Firestore collection (keyed by contact). Increment their total_returned count by 1 and add +10 to their credit_score. The finder profile document must store: name, contact, total_returned, and credit_score.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Modify the GET /items (or equivalent list endpoint) so that found items are sorted by their finder's credit_score in descending order (highest credit score first). Lost items retain their existing sort order (latest timestamp first). The credit_score is fetched from the 'finders' collection using the item's contact field.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add a GET /finders endpoint that returns all finder profiles from the 'finders' Firestore collection, each including name, contact, total_returned, and credit_score, sorted by credit_score descending. This endpoint will be used by the frontend leaderboard or badge display.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Include the finder's current credit_score in the item data returned by the backend list/detail endpoints for found items. Attach the credit_score (and badge tier label) to each found item's response payload by joining with the 'finders' collection on the contact field, so the frontend can render the badge without a separate fetch.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Campus Lost & Found Portal",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

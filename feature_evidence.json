@@ -1,0 +1,24 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-item-card-ui-to-display-a-credit-score-badge-for-the-finder-of-each-found-item-derive-the-badge-tier-from-the-finder-s-credit-score-stored-on-the-item-or-fetched-from-context-bronze-0-20-points-silver-21-50-points-gold-51-points-the-badge-should-appear-near-the-finder-s-contact-info-on-the-card-for-lost-items-or-items-with-no-finder-profile-no-badge-is-shown",
+      "featureTitle": "Update the item card UI to display a credit score badge for the finder of each 'found' item. Derive the badge tier from the finder's credit_score stored on the item or fetched from context: 🥉 Bronze (0–20 points), 🥈 Silver (21–50 points), 🥇 Gold (51+ points). The badge should appear near the finder's contact info on the card. For lost items or items with no finder profile, no badge is shown.",
+      "files": [
+        "frontend/src/components/ItemCard.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
